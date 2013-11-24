@@ -3,18 +3,51 @@
 namespace Curso\Service;
 
 use Application\Service\UsuarioInterface;
+use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager\ServiceManager;
 
-class UsuarioService implements UsuarioInterface {
+
+
+//class UsuarioService implements UsuarioInterface {
+class UsuarioService implements ServiceManagerAwareInterface{
+	
+	//protected $serviceLocator;
+	
 	protected $nombre;
 	protected $apellidoPaterno;
 	protected $apellidoMaterno;
 	/**
 	 * @return the $nombre
 	 */
-	public function getNombre() {
+	/* public function getNombre() {
 		return $this->nombre;
-	}
+	}*/
 
+	public function setServiceManager(ServiceManager $serviceManager){
+		$this->sm = $serviceManager;
+	} 
+	public function getServiceManager(){
+		return $this->sm;
+	}
+	
+	public function testDB(){
+		$adapter = $this->getServiceManager()->get('Zend\Db\Adapter\Adapter');
+		
+		$result = $adapter->query('SELECT * FROM user WHERE Id=?', array(5));
+				
+		echo get_class($result). '<br />';
+		
+		$data = $result->current();
+		
+		print_r($data);
+		}
+	
+	
+	
+	public function getNombre() {
+		return $this->nombre.' '.$this->apellidoPaterno .''.$this->apellidoMaterno;
+	}
+	
 	/**
 	 * @return the $apellidoPaterno
 	 */
